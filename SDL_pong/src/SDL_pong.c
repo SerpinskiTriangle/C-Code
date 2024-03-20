@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 //please for the love of christ do not actually read this, it brings me great shame but i am simply too lazy to make this pretty or safe
 
 
