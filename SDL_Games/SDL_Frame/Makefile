@@ -4,7 +4,7 @@ LDFLAGS = -lSDL2 -L../lib
 
 SRCS = $(wildcard src/*.c)
 OBJS = $(SRCS:.c=.o)
-EXEC = Tetris
+EXEC = Frame
 
 .PHONY: all clean
 
