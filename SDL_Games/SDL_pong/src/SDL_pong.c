@@ -2,16 +2,11 @@
 //please for the love of christ do not actually read this, it brings me great shame but i am simply too lazy to make this pretty or safe
 
 
-//one skrillion variables, very organized (i didn't wanna use structs)   
-int xVelocity = 12;
-int yVelocity = 8;
-int paddleSpeed = 5;
+//one skrillion variables, very organized 
 int bounceMultiplier = 10;
+int paddleSpeed = 4;
 const int windowHeight = 900;
 const int windowWidth = 600;
-SDL_Rect rect = {200,200,50,50};
-SDL_Rect leftPaddle = {1,100,30,200};
-SDL_Rect rightPaddle = {windowWidth-30,100,30,200};
 SDL_Event event;
 int lMoveState = 0;
 int rMoveState = 0;
@@ -22,6 +17,17 @@ SDL_Renderer* renderer = NULL;
 const Uint8 *keyboardState;
 int running = 1;
 int letterSize = 50 ;
+
+struct rectangle{
+    int xVelocity;
+    int yVelocity;
+    SDL_Rect rect;
+};
+
+
+struct rectangle rightPaddle = {0,0,{windowWidth-30,100,30,200}};
+struct rectangle leftPaddle = {0,0,{1,100,30,200}};
+struct rectangle ball = {9,2,{200,200,50,50}};
 
 int digits[10][5][5] = {
     {
@@ -124,19 +130,19 @@ int main(){
         keyboardState = SDL_GetKeyboardState(NULL);
 
         if (keyboardState[SDL_SCANCODE_UP]){
-            rightPaddle.y -= paddleSpeed;
+            rightPaddle.rect.y -= paddleSpeed;
             rMoveState = 1;
         }
         if (keyboardState[SDL_SCANCODE_DOWN]){
-            rightPaddle.y += paddleSpeed;
+            rightPaddle.rect.y += paddleSpeed;
             rMoveState = -1;
         }
         if (keyboardState[SDL_SCANCODE_W]){
-            leftPaddle.y -= paddleSpeed;
+            leftPaddle.rect.y -= paddleSpeed;
             lMoveState = 1;
         }
         if (keyboardState[SDL_SCANCODE_S]){
-            leftPaddle.y += paddleSpeed;
+            leftPaddle.rect.y += paddleSpeed;
             lMoveState = -1;
         }
         //yeah i dont like the if stack either but switch doesn't exactly work
@@ -147,28 +153,28 @@ int main(){
         SDL_SetRenderDrawColor(renderer,255,255,255,255);
 
         //very competent way to handle gamestate events (trust)
-        if ((rect.x <= leftPaddle.x+leftPaddle.w)&&(rect.y>=leftPaddle.y-rect.h)&&(rect.y<=leftPaddle.y+leftPaddle.h)){ 
-            xVelocity = -xVelocity;
-            yVelocity = lMoveState*bounceMultiplier;
+        if ((ball.rect.x <= leftPaddle.rect.x+leftPaddle.rect.w)&&(ball.rect.y>=leftPaddle.rect.y-ball.rect.h)&&(ball.rect.y<=leftPaddle.rect.y+leftPaddle.rect.h)){ 
+            ball.xVelocity = -ball.xVelocity;
+            ball.yVelocity = lMoveState*bounceMultiplier;
         }
-        if ((rect.x + rect.w >= rightPaddle.x)&&(rect.y>=rightPaddle.y-rect.h)&&(rect.y<=rightPaddle.y+rightPaddle.h)){
-            xVelocity = -xVelocity;
-            yVelocity =  rMoveState*bounceMultiplier;
+        if ((ball.rect.x + ball.rect.w >= rightPaddle.rect.x)&&(ball.rect.y>=rightPaddle.rect.y-ball.rect.h)&&(ball.rect.y<=rightPaddle.rect.y+rightPaddle.rect.h)){
+            ball.xVelocity = -ball.xVelocity;
+            ball.yVelocity =  rMoveState*bounceMultiplier;
         }
-        if ((rect.y <= 0 )||(rect.y + rect.h >= windowHeight)){ 
-            yVelocity = -yVelocity;
+        if ((ball.rect.y <= 0 )||(ball.rect.y + ball.rect.h >= windowHeight)){ 
+            ball.yVelocity = -ball.yVelocity;
         }
-        if (rect.x<=0){
+        if (ball.rect.x<=0){
             lScore++;
             resetPos();
         }
-        if (rect.x>=windowWidth){
+        if (ball.rect.x>=windowWidth){
             rScore++;
             resetPos();
         }
 
-        rect.x -= xVelocity;
-        rect.y -= yVelocity;
+        ball.rect.x -= ball.xVelocity;
+        ball.rect.y -= ball.yVelocity;
 
 
         //render all the things! (magic numbers galore)
@@ -178,9 +184,9 @@ int main(){
         renderLetter(windowWidth/2 - 20 -2*letterSize,20,rScore/10);
         renderLetter(windowWidth/2 - 20 - letterSize,20,rScore%10);
 
-        SDL_RenderDrawRect(renderer,&rect);
-        SDL_RenderDrawRect(renderer,&leftPaddle);
-        SDL_RenderDrawRect(renderer,&rightPaddle);
+        SDL_RenderDrawRect(renderer,&ball.rect);
+        SDL_RenderDrawRect(renderer,&leftPaddle.rect);
+        SDL_RenderDrawRect(renderer,&rightPaddle.rect);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyRenderer(renderer);
@@ -191,8 +197,8 @@ int main(){
 
 
 void resetPos(){ //this especially has no need to exist but i guess it's more readable
-    rect.x = (int)windowWidth/2;
-    rect.y = (int)windowHeight/2;
+    ball.rect.x = (int)windowWidth/2;
+    ball.rect.y = (int)windowHeight/2;
 }
 
 
