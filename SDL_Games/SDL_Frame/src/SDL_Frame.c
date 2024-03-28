@@ -8,6 +8,7 @@ int8_t still;
 const Uint8 *keyboardState;
 const int playerHeight = 50;
 const int playerWidth = 50;
+int frame = 0;
 struct state {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -25,7 +26,7 @@ struct entity{
     float ySpeed;
     SDL_Rect hitbox;
     int faceAngleDeg;
-    int moveAngleDeg;
+    float    moveAngleRad;
 };
 
 struct entity player = {0,0,{0,0,playerHeight, playerWidth},0,0};
@@ -52,6 +53,8 @@ int main(){
     
 
     while (state.running){
+        SDL_SetRenderDrawColor(state.renderer,0,0,0,255);
+        SDL_RenderClear(state.renderer);
         while (SDL_PollEvent(&state.event)){
             if (state.event.type == SDL_QUIT){
                 state.running = 0;
@@ -61,14 +64,31 @@ int main(){
         keyboardState = SDL_GetKeyboardState(NULL);
         if (!(keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S] || keyboardState[SDL_SCANCODE_A] || keyboardState[SDL_SCANCODE_D])){
             still = 1;
+            player.xSpeed = 0;
+            player.ySpeed = 0;
         }
         else {
-            player.moveAngleDeg = atan2(keyboardState[SDL_SCANCODE_S] - keyboardState[SDL_SCANCODE_W], keyboardState[SDL_SCANCODE_D] - keyboardState[SDL_SCANCODE_A]);
+            player.moveAngleRad = atan2(keyboardState[SDL_SCANCODE_S] - keyboardState[SDL_SCANCODE_W], keyboardState[SDL_SCANCODE_D] - keyboardState[SDL_SCANCODE_A]);
+            
+            player.xSpeed = cos(player.moveAngleRad);
+            player.ySpeed = sin(player.moveAngleRad);
+
+            player.hitbox.x += 5 * player.xSpeed;
+            player.hitbox.y += 5 * player.ySpeed;
         }//quite silly indeed
+
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
         SDL_RenderDrawRect(state.renderer,&player.hitbox);
+        SDL_RenderPresent(state.renderer);
+        SDL_Delay(16);
 
-
+        if (!(frame % 30)){
+            printf("MovAng: %f\nxSpeed: %f\nySpeed: %f\n", player.moveAngleRad,player.xSpeed,player.ySpeed);
+        }
+        frame++;
     }
+    SDL_DestroyRenderer(state.renderer);
+    SDL_DestroyWindow(state.window);
+    SDL_Quit();
     return 0;
 }
