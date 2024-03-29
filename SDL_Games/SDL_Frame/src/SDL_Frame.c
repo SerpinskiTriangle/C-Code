@@ -2,6 +2,8 @@
 #include <math.h>
 #include <unistd.h>
 
+//this looks atrocious because i want a working demo of everything before i make it scalable to innumerable entities
+
 #define CLASS_COUNT 3
 
 
@@ -48,7 +50,7 @@ struct entity ***gameEntities[CLASS_COUNT];
 
 void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w);
 
-int collideStatus(struct entity ent1, struct entity ent2);
+int collideStatus(float ent1X, float ent1Y, int ent1H, int  ent1W, float ent2X, float ent2Y, int ent2H, int ent2W);
 
 
 int main(){
@@ -70,27 +72,31 @@ int main(){
             }
         }
         keyboardState = SDL_GetKeyboardState(NULL);
+
         if (!(keyboardState[SDL_SCANCODE_W] - keyboardState[SDL_SCANCODE_S] || keyboardState[SDL_SCANCODE_A] - keyboardState[SDL_SCANCODE_D])){
             still = 1;
+            player.xSpeed = 0;
+            player.ySpeed = 0;
         }
         else {
             player.moveAngleRad = atan2(keyboardState[SDL_SCANCODE_S] - keyboardState[SDL_SCANCODE_W], keyboardState[SDL_SCANCODE_D] - keyboardState[SDL_SCANCODE_A]);
             
             player.xSpeed = cos(player.moveAngleRad);
             player.ySpeed = sin(player.moveAngleRad);
-
-            player.xPos += 5 * player.xSpeed;
-            player.yPos += 5 * player.ySpeed;
         }//quite silly indeed
 
+        if (collideStatus(player.xPos + player.xSpeed * 5,player.yPos + player.ySpeed * 5,player.height + player.ySpeed,player.width + player.xSpeed,test.xPos,test.yPos,test.height,test.width)){
+            player.xSpeed = 0;
+            player.ySpeed = 0;
+        }
+
+        player.xPos += 5 * player.xSpeed;
+        player.yPos += 5 * player.ySpeed;
         //debug section
         printf("\rMovAng/pi: %-+6f xSpeed: %-+6f ySpeed: %-+6f scnW: %d scnA: %d scnS: %d scnD: %d",player.moveAngleRad / 3.1415926,player.xSpeed*5,player.ySpeed*5,keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
         fflush(stdout);
 
-        player.xSpeed = 0;
-        player.ySpeed = 0;
-
-        collide = collideStatus(player,test);
+        collide = collideStatus(player.xPos,player.yPos,player.height,player.width,test.xPos,test.yPos,test.height,test.width);
 
         SDL_SetRenderDrawColor(state.renderer,255,255 * !collide,255 * !collide,255);
         drawEntHitbox(state.renderer,player);
@@ -116,12 +122,12 @@ void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w){
 }
 
 
-int collideStatus(struct entity ent1, struct entity ent2){
+int collideStatus(float ent1X, float ent1Y, int ent1H, int  ent1W, float ent2X, float ent2Y, int ent2H, int ent2W){
     return(
-        (ent1.xPos + ent1.width >= ent2.xPos)&&
-        (ent1.xPos <= ent2.xPos + ent2.width)&&
-        (ent1.yPos + ent1.height >= ent2.yPos)&&
-        (ent1.yPos <= ent2.yPos + ent2.height)
+        (ent1X + ent1W >= ent2X)&&
+        (ent1X <= ent2X + ent2W)&&
+        (ent1Y + ent1H >= ent2Y)&&
+        (ent1Y <= ent2Y + ent2H)
     );
 }//its not unreadable, its optimized (trust)
 
