@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <math.h>
+#include <unistd.h>
 
 #define CLASS_COUNT 3
 
@@ -26,7 +27,7 @@ struct entity{
     float ySpeed;
     SDL_Rect hitbox;
     int faceAngleDeg;
-    float    moveAngleRad;
+    float moveAngleRad;
 };
 
 struct entity player = {0,0,{0,0,playerHeight, playerWidth},0,0};
@@ -77,14 +78,15 @@ int main(){
             player.hitbox.y += 5 * player.ySpeed;
         }//quite silly indeed
 
+        //debug section
+        printf("\rMovAng: %-6f xSpeed: %-6f ySpeed: %-6f scnW: %d scnA: %d scnS: %d scnD: %d",player.moveAngleRad,player.xSpeed,player.ySpeed,keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        fflush(stdout);
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
         SDL_RenderDrawRect(state.renderer,&player.hitbox);
         SDL_RenderPresent(state.renderer);
         SDL_Delay(16);
 
-        if (!(frame % 30)){
-            printf("MovAng: %f\nxSpeed: %f\nySpeed: %f\n", player.moveAngleRad,player.xSpeed,player.ySpeed);
-        }
+
         frame++;
     }
     SDL_DestroyRenderer(state.renderer);
