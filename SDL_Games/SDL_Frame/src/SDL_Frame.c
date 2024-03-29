@@ -10,6 +10,7 @@ const Uint8 *keyboardState;
 const int playerHeight = 50;
 const int playerWidth = 50;
 int frame = 0;
+int collide = 0;
 struct state {
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -19,7 +20,7 @@ struct state {
     int running;
 };
 
-struct state state = {NULL,NULL,NULL,600,600,1};
+struct state state = {NULL,NULL,{NULL},600,600,1};
 
 
 struct entity{
@@ -34,6 +35,7 @@ struct entity{
 };
 
 struct entity player = {0,0,0,0,playerHeight, playerWidth,0,0};
+struct entity test = {300,300,0,0,100,100,0,0};
 
 struct entity ***gameEntities[CLASS_COUNT];    
 /* ok please dont laugh i promise this is for memory efficiency
@@ -44,7 +46,9 @@ struct entity ***gameEntities[CLASS_COUNT];
 
 
 
-void drawRect(SDL_Renderer *renderer, int x, int y, int h, int w);
+void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w);
+
+int collideStatus(struct entity ent1, struct entity ent2);
 
 
 int main(){
@@ -85,13 +89,18 @@ int main(){
 
         player.xSpeed = 0;
         player.ySpeed = 0;
-        SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
-        drawRect(state.renderer,player.xPos,player.yPos,player.height,player.width);
+
+        collide = collideStatus(player,test);
+
+        SDL_SetRenderDrawColor(state.renderer,255,255 * !collide,255 * !collide,255);
+        drawEntHitbox(state.renderer,player);
+        drawEntHitbox(state.renderer,test);
         SDL_RenderPresent(state.renderer);
         SDL_Delay(16);
         
         frame++;
     }
+    printf("\n");
     SDL_DestroyRenderer(state.renderer);
     SDL_DestroyWindow(state.window);
     SDL_Quit();
@@ -99,9 +108,23 @@ int main(){
 }
 
 
-void drawRect(SDL_Renderer *renderer, int x, int y, int h, int w){
+void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w){
     SDL_RenderDrawLine(renderer,x,y,x+w,y);
     SDL_RenderDrawLine(renderer,x,y,x,y+h);
     SDL_RenderDrawLine(renderer,x+w,y+h,x+w,y);
     SDL_RenderDrawLine(renderer,x+w,y+h,x,y+h);
+}
+
+
+int collideStatus(struct entity ent1, struct entity ent2){
+    return(
+        (ent1.xPos + ent1.width >= ent2.xPos)&&
+        (ent1.xPos <= ent2.xPos + ent2.width)&&
+        (ent1.yPos + ent1.height >= ent2.yPos)&&
+        (ent1.yPos <= ent2.yPos + ent2.height)
+    );
+}//its not unreadable, its optimized (trust)
+
+void drawEntHitbox(struct SDL_renderer *renderer, struct entity entity){
+    drawRect(renderer,entity.xPos,entity.yPos,entity.height,entity.width);
 }
