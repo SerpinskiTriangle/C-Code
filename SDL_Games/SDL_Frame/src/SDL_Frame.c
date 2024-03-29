@@ -23,14 +23,17 @@ struct state state = {NULL,NULL,NULL,600,600,1};
 
 
 struct entity{
+    float xPos;
+    float yPos;
     float xSpeed;
     float ySpeed;
-    SDL_Rect hitbox;
+    int height;
+    int width;
     int faceAngleDeg;
     float moveAngleRad;
 };
 
-struct entity player = {0,0,{0,0,playerHeight, playerWidth},0,0};
+struct entity player = {0,0,0,0,playerHeight, playerWidth,0,0};
 
 struct entity ***gameEntities[CLASS_COUNT];    
 /* ok please dont laugh i promise this is for memory efficiency
@@ -41,7 +44,7 @@ struct entity ***gameEntities[CLASS_COUNT];
 
 
 
-
+void drawRect(SDL_Renderer *renderer, int x, int y, int h, int w);
 
 
 int main(){
@@ -63,10 +66,8 @@ int main(){
             }
         }
         keyboardState = SDL_GetKeyboardState(NULL);
-        if (!(keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S] || keyboardState[SDL_SCANCODE_A] || keyboardState[SDL_SCANCODE_D])){
+        if (!(keyboardState[SDL_SCANCODE_W] - keyboardState[SDL_SCANCODE_S] || keyboardState[SDL_SCANCODE_A] - keyboardState[SDL_SCANCODE_D])){
             still = 1;
-            player.xSpeed = 0;
-            player.ySpeed = 0;
         }
         else {
             player.moveAngleRad = atan2(keyboardState[SDL_SCANCODE_S] - keyboardState[SDL_SCANCODE_W], keyboardState[SDL_SCANCODE_D] - keyboardState[SDL_SCANCODE_A]);
@@ -74,23 +75,33 @@ int main(){
             player.xSpeed = cos(player.moveAngleRad);
             player.ySpeed = sin(player.moveAngleRad);
 
-            player.hitbox.x += 5 * player.xSpeed;
-            player.hitbox.y += 5 * player.ySpeed;
+            player.xPos += 5 * player.xSpeed;
+            player.yPos += 5 * player.ySpeed;
         }//quite silly indeed
 
         //debug section
-        printf("\rMovAng: %-6f xSpeed: %-6f ySpeed: %-6f scnW: %d scnA: %d scnS: %d scnD: %d",player.moveAngleRad,player.xSpeed,player.ySpeed,keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        printf("\rMovAng/pi: %-+6f xSpeed: %-+6f ySpeed: %-+6f scnW: %d scnA: %d scnS: %d scnD: %d",player.moveAngleRad / 3.1415926,player.xSpeed*5,player.ySpeed*5,keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
         fflush(stdout);
+
+        player.xSpeed = 0;
+        player.ySpeed = 0;
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
-        SDL_RenderDrawRect(state.renderer,&player.hitbox);
+        drawRect(state.renderer,player.xPos,player.yPos,player.height,player.width);
         SDL_RenderPresent(state.renderer);
         SDL_Delay(16);
-
-
+        
         frame++;
     }
     SDL_DestroyRenderer(state.renderer);
     SDL_DestroyWindow(state.window);
     SDL_Quit();
     return 0;
+}
+
+
+void drawRect(SDL_Renderer *renderer, int x, int y, int h, int w){
+    SDL_RenderDrawLine(renderer,x,y,x+w,y);
+    SDL_RenderDrawLine(renderer,x,y,x,y+h);
+    SDL_RenderDrawLine(renderer,x+w,y+h,x+w,y);
+    SDL_RenderDrawLine(renderer,x+w,y+h,x,y+h);
 }
