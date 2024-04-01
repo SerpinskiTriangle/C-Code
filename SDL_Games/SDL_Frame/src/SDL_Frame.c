@@ -85,8 +85,10 @@ int main(){
             player.ySpeed = sin(player.moveAngleRad);
         }//quite silly indeed
 
-        if (collideStatus(player.xPos + player.xSpeed * 5,player.yPos + player.ySpeed * 5,player.height + player.ySpeed,player.width + player.xSpeed,test.xPos,test.yPos,test.height,test.width)){
+        if (collideStatus(player.xPos + player.xSpeed * 5,player.yPos,player.height,player.width,test.xPos,test.yPos,test.height,test.width)){
             player.xSpeed = 0;
+        }
+        if (collideStatus(player.xPos,player.yPos + player.ySpeed * 5,player.height,player.width,test.xPos,test.yPos,test.height,test.width)){
             player.ySpeed = 0;
         }
 
