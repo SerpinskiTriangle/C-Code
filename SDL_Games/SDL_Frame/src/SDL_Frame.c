@@ -8,6 +8,7 @@
 #define MAX_ENTITIES 5
 
 
+
 int8_t still;
 const Uint8 *keyboardState;
 const int playerHeight = 50;
@@ -35,23 +36,20 @@ struct entity{
     int width;
     int faceAngleDeg;
     float moveAngleRad;
-}EG;
+};
 
-
-struct entity player = {0,0,0,0,playerHeight, playerWidth,0,0};
-struct entity test = {300,300,0,0,100,100,0,0};
 
 struct entity ***gameEntities[CLASS_COUNT];
 
-int allocTable[CLASS_COUNT][1] = {
-    {0}, //walls
-    {0}, //entities
-    {0}  //projectiles
+int allocTable[CLASS_COUNT][2] = {//will be an arr of pointers (mentioned later)
+    {0,0}, //walls
+    {0,0}, //entities
+    {0,0}  //projectiles
 };
 
 /* ok please dont laugh i promise this is for memory efficiency
  * all entities are in a hierarchy (class > type > individual entity)
- * 1 type per class for now (pointers will be implemented later for different numbers of types for each class)(i think)
+ * 2 types per class for now (pointers will be implemented later for different numbers of types for each class)(i think)
  * allocTable holds the amount of entity pointers for each type for each class
  * new pointers to entities will always be placed at that index
  */
@@ -81,17 +79,21 @@ int main(){
     SDL_RenderClear(state.renderer);
 
     for (int i = 0; i <= CLASS_COUNT - 1; i++){
-        gameEntities[i] = (struct entity***)malloc(sizeof(struct entity**));
-        for (int j = 0; j <= 5; j++){
-            *gameEntities[i] = (struct entity**)malloc(sizeof(struct entity*) * MAX_ENTITIES);
+        gameEntities[i] = (struct entity***)malloc(sizeof(struct entity**)*2);
+        for (int j = 0; j <= 1; j++){
+            *(gameEntities[i]+j) = (struct entity**)malloc(sizeof(struct entity*) * MAX_ENTITIES);
         }
     }
 
 
     //we love castin spells
+    summonEntity(0,0,0,0,50,50,0,0,1,0);//player
     summonEntity(100,100,0,0,350,50,0,0,0,0);
-    summonEntity(400,100,0,0,350,50,0,0,1,0);
-    summonEntity(150,400,0,0,50,250,0,0,1,0);
+    summonEntity(400,100,0,0,350,50,0,0,0,0);
+    summonEntity(150,400,0,0,50,250,0,0,0,0);
+    summonEntity(210,100,0,0,50,190,0,0,0,0);
+    summonEntity(300,300,0,0,10,10,0,0,0,0);
+    summonEntity(200,200,0,0,30,30,0,0,1,1);//test little guy
     while (state.running){
         SDL_SetRenderDrawColor(state.renderer,0,0,0,255);
         SDL_RenderClear(state.renderer);
@@ -104,44 +106,54 @@ int main(){
         keyboardState = SDL_GetKeyboardState(NULL);
         if (!(keyboardState[SDL_SCANCODE_W] - keyboardState[SDL_SCANCODE_S] || keyboardState[SDL_SCANCODE_A] - keyboardState[SDL_SCANCODE_D])){
             still = 1;
-            player.xSpeed = 0;
-            player.ySpeed = 0;
+            gameEntities[1][0][0]->xSpeed = 0;
+            gameEntities[1][0][0]->ySpeed = 0;
         }
         else {
-            player.moveAngleRad = atan2(keyboardState[SDL_SCANCODE_S] - keyboardState[SDL_SCANCODE_W], keyboardState[SDL_SCANCODE_D] - keyboardState[SDL_SCANCODE_A]);
+            gameEntities[1][0][0]->moveAngleRad = atan2(keyboardState[SDL_SCANCODE_S] - keyboardState[SDL_SCANCODE_W], keyboardState[SDL_SCANCODE_D] - keyboardState[SDL_SCANCODE_A]);
             
-            player.xSpeed = cos(player.moveAngleRad);
-            player.ySpeed = sin(player.moveAngleRad);
+            gameEntities[1][0][0]->xSpeed = cos(gameEntities[1][0][0]->moveAngleRad);
+            gameEntities[1][0][0]->ySpeed = sin(gameEntities[1][0][0]->moveAngleRad);
         }//quite silly indeed
 
-        if (collideStatus(player.xPos + player.xSpeed * 5,player.yPos,player.height,player.width,test.xPos,test.yPos,test.height,test.width)){
-            player.xSpeed = 0;
-        }
-        if (collideStatus(player.xPos,player.yPos + player.ySpeed * 5,player.height,player.width,test.xPos,test.yPos,test.height,test.width)){
-            player.ySpeed = 0;
-        }
-
-        
-        player.xPos += 5 * player.xSpeed;
-        player.yPos += 5 * player.ySpeed;
-        //debug section
-        printf("\rMovAng/pi: %-+6f xSpeed: %-+6f ySpeed: %-+6f scnW: %d scnA: %d scnS: %d scnD: %d",player.moveAngleRad / 3.1415926,player.xSpeed*5,player.ySpeed*5,keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
-        fflush(stdout);
-
-        collide = collideStatus(player.xPos,player.yPos,player.height,player.width,test.xPos,test.yPos,test.height,test.width);
-
-        SDL_SetRenderDrawColor(state.renderer,255,255 * !collide,255 * !collide,255);
-
-        
-        for(int class = 0; class <= CLASS_COUNT - 1; class++){
-            for(int entity = 0; entity < allocTable[class][0]; entity++){
-                drawEntHitbox(state.renderer,*gameEntities[class][0][entity]);
+        for (int entity = 0; entity < allocTable[1][0]; entity++){
+            for (int wall = 0; wall < allocTable[0][0]; wall++){
+                if (collideStatus(gameEntities[1][0][entity]->xPos+gameEntities[1][0][entity]->xSpeed*5,gameEntities[1][0][entity]->yPos,gameEntities[1][0][entity]->height,gameEntities[1][0][entity]->width,gameEntities[0][0][wall]->xPos,gameEntities[0][0][wall]->yPos,gameEntities[0][0][wall]->height,gameEntities[0][0][wall]->width)){
+                    gameEntities[1][0][entity]->xSpeed = 0;
+                }
+                if (collideStatus(gameEntities[1][0][entity]->xPos,gameEntities[1][0][entity]->yPos+gameEntities[1][0][entity]->ySpeed*5,gameEntities[1][0][entity]->height,gameEntities[1][0][entity]->width,gameEntities[0][0][wall]->xPos,gameEntities[0][0][wall]->yPos,gameEntities[0][0][wall]->height,gameEntities[0][0][wall]->width)){
+                    gameEntities[1][0][entity]->ySpeed = 0;
+                }
             }
         }
         
-        //drawEntHitbox(state.renderer,*gameEntities[0][0][0]);
-        drawEntHitbox(state.renderer,player);
-        drawEntHitbox(state.renderer,test);
+
+        for (int class = 0; class < CLASS_COUNT; class++){//the walls will be able to move if i so will it
+            for (int type = 0; type < 2; type++){//proper (non-magic-number) implementation later
+                for (int entity = 0; entity < allocTable[class][type]; entity++){
+                    gameEntities[class][type][entity]->xPos += gameEntities[class][type][entity]->xSpeed * 5;
+                    gameEntities[class][type][entity]->yPos += gameEntities[class][type][entity]->ySpeed * 5;
+                }
+            }
+        }
+        //gameEntities[1][0][0]->xPos += 5 * gameEntities[1][0][0]->xSpeed;
+        //gameEntities[1][0][0]->yPos += 5 * gameEntities[1][0][0]->ySpeed;
+        //debug section
+        printf("\rMovAng/pi: %-+6f xSpeed: %-+6f ySpeed: %-+6f scnW: %d scnA: %d scnS: %d scnD: %d",gameEntities[1][0][0]->moveAngleRad / 3.1415926,gameEntities[1][0][0]->xSpeed*5,gameEntities[1][0][0]->ySpeed*5,keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        fflush(stdout);
+
+
+        SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
+
+        
+        for(int class = 0; class <= CLASS_COUNT - 1; class++){
+            for (int type = 0; type <= 1; type++){
+                for(int entity = 0; entity < allocTable[class][type]; entity++){
+                    drawEntHitbox(state.renderer,*gameEntities[class][type][entity]);
+                }
+            }
+        }
+
         SDL_RenderPresent(state.renderer);
         SDL_Delay(16);
         
@@ -150,8 +162,10 @@ int main(){
     //entity cleanup
     
     for(int class = 0; class <= CLASS_COUNT - 1; class++){
-        for(int entity = 0; entity < allocTable[class][0]; entity++){
-            free(gameEntities[class][0][entity]);
+        for (int type = 0; type <= 1; type++){
+            for(int entity = 0; entity < allocTable[class][type]; entity++){
+                free(gameEntities[class][type][entity]);
+            }
         }
     }
     
