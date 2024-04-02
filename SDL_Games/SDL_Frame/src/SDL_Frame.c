@@ -93,7 +93,7 @@ int main(){
     summonEntity(150,400,0,0,50,250,0,0,0,0);
     summonEntity(210,100,0,0,50,190,0,0,0,0);
     summonEntity(300,300,0,0,10,10,0,0,0,0);
-    summonEntity(200,200,0,0,30,30,0,0,1,1);//test little guy
+    summonEntity(200,200,0.1,0.3,30,30,0,0,1,1);//test little guy
     while (state.running){
         SDL_SetRenderDrawColor(state.renderer,0,0,0,255);
         SDL_RenderClear(state.renderer);
@@ -116,16 +116,20 @@ int main(){
             gameEntities[1][0][0]->ySpeed = sin(gameEntities[1][0][0]->moveAngleRad);
         }//quite silly indeed
 
-        for (int entity = 0; entity < allocTable[1][0]; entity++){
-            for (int wall = 0; wall < allocTable[0][0]; wall++){
-                if (collideStatus(gameEntities[1][0][entity]->xPos+gameEntities[1][0][entity]->xSpeed*5,gameEntities[1][0][entity]->yPos,gameEntities[1][0][entity]->height,gameEntities[1][0][entity]->width,gameEntities[0][0][wall]->xPos,gameEntities[0][0][wall]->yPos,gameEntities[0][0][wall]->height,gameEntities[0][0][wall]->width)){
-                    gameEntities[1][0][entity]->xSpeed = 0;
-                }
-                if (collideStatus(gameEntities[1][0][entity]->xPos,gameEntities[1][0][entity]->yPos+gameEntities[1][0][entity]->ySpeed*5,gameEntities[1][0][entity]->height,gameEntities[1][0][entity]->width,gameEntities[0][0][wall]->xPos,gameEntities[0][0][wall]->yPos,gameEntities[0][0][wall]->height,gameEntities[0][0][wall]->width)){
-                    gameEntities[1][0][entity]->ySpeed = 0;
+        for (int type = 0; type <= 1; type++){//collision detection + resolution
+            for (int entity = 0; entity < allocTable[1][type]; entity++){
+                for (int wall = 0; wall < allocTable[0][0]; wall++){
+                    if (collideStatus(gameEntities[1][type][entity]->xPos+gameEntities[1][type][entity]->xSpeed*5,gameEntities[1][type][entity]->yPos,gameEntities[1][type][entity]->height,gameEntities[1][type][entity]->width,gameEntities[0][0][wall]->xPos,gameEntities[0][0][wall]->yPos,gameEntities[0][0][wall]->height,gameEntities[0][0][wall]->width)){
+                        gameEntities[1][type][entity]->xSpeed = 0;
+                    }
+                    if (collideStatus(gameEntities[1][type][entity]->xPos,gameEntities[1][type][entity]->yPos+gameEntities[1][type][entity]->ySpeed*5,gameEntities[1][type][entity]->height,gameEntities[1][type][entity]->width,gameEntities[0][0][wall]->xPos,gameEntities[0][0][wall]->yPos,gameEntities[0][0][wall]->height,gameEntities[0][0][wall]->width)){
+                        gameEntities[1][type][entity]->ySpeed = 0;
+                    }
                 }
             }
         }
+
+
         
 
         for (int class = 0; class < CLASS_COUNT; class++){//the walls will be able to move if i so will it
@@ -157,8 +161,7 @@ int main(){
         SDL_RenderPresent(state.renderer);
         SDL_Delay(16);
         
-        frame++;
-    }
+        frame++;    }
     //entity cleanup
     
     for(int class = 0; class <= CLASS_COUNT - 1; class++){
