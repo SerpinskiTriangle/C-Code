@@ -103,6 +103,14 @@ int main(){
                 break;
             }
         }
+
+        for (int entity = 0; entity < allocTable[1][1]; entity++){//player-seeking logic
+            gameEntities[1][1][entity]->moveAngleRad = atan2(gameEntities[1][0][0]->yPos-gameEntities[1][1][entity]->yPos,gameEntities[1][0][0]->xPos-gameEntities[1][1][entity]->xPos);
+            
+            gameEntities[1][1][entity]->xSpeed = cos(gameEntities[1][1][entity]->moveAngleRad) /2;
+            gameEntities[1][1][entity]->ySpeed = sin(gameEntities[1][1][entity]->moveAngleRad) /2;
+        }
+        
         keyboardState = SDL_GetKeyboardState(NULL);
         if (!(keyboardState[SDL_SCANCODE_W] - keyboardState[SDL_SCANCODE_S] || keyboardState[SDL_SCANCODE_A] - keyboardState[SDL_SCANCODE_D])){
             still = 1;
@@ -115,6 +123,8 @@ int main(){
             gameEntities[1][0][0]->xSpeed = cos(gameEntities[1][0][0]->moveAngleRad);
             gameEntities[1][0][0]->ySpeed = sin(gameEntities[1][0][0]->moveAngleRad);
         }//quite silly indeed
+
+        
 
         for (int type = 0; type <= 1; type++){//collision detection + resolution
             for (int entity = 0; entity < allocTable[1][type]; entity++){
