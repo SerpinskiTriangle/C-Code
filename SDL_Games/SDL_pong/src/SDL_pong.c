@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <utility_functions.h>
 //please for the love of christ do not actually read this, it brings me great shame but i am simply too lazy to make this pretty or safe
 
 
@@ -23,6 +24,7 @@ struct rectangle{
     int yVelocity;
     SDL_Rect rect;
 };
+
 
 
 struct rectangle rightPaddle = {0,0,{windowWidth-30,100,30,200}};
@@ -102,10 +104,6 @@ int digits[10][5][5] = {
     },
 };
 
-//these dont need to exist but i wanted to encapsulate anyway
-void resetPos();
-void renderLetter(int x, int y, int digit);
-void drawRect(int x, int y, int h, int w);
 
 int main(){
     SDL_Init(SDL_INIT_VIDEO);
@@ -196,29 +194,3 @@ int main(){
 }
 
 
-void resetPos(){ //this especially has no need to exist but i guess it's more readable
-    ball.rect.x = (int)windowWidth/2;
-    ball.rect.y = (int)windowHeight/2;
-}
-
-
-void drawRect(int x, int y, int h, int w){
-    SDL_SetRenderDrawColor(renderer,255,255,255,255);
-    for (int i = 0; i <= w; i++){
-        for (int j = 0; j <= h; j++){
-            SDL_RenderDrawPoint(renderer, x + i, y + j);
-        }
-    }
-}
-
-
-void renderLetter(int xAdj, int yAdj, int digit){
-    SDL_SetRenderDrawColor(renderer,255,255,255,255);
-    for (int i = 0; i <=4; i++){
-        for (int j = 0; j <=4; j++){
-            if (digits[digit][j][i]){
-                drawRect(xAdj+i*letterSize/5,yAdj+j*letterSize/5,letterSize/5,letterSize/5);
-            }
-        }
-    }
-}
