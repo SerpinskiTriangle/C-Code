@@ -36,8 +36,8 @@ int collideStatus(float ent1X, float ent1Y, int ent1H, int  ent1W, float ent2X, 
         (ent1Y <= ent2Y + ent2H)
     );
 }//its not unreadable, its optimized (trust)
-void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity){
-    drawRect(renderer,ceil(entity.xPos),ceil(entity.yPos),entity.height,entity.width);
+void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity, struct entity playerEntity){
+    drawRect(renderer,ceil(entity.xPos)-playerEntity.xPos+state.windowWidth/2-playerEntity.width/2,ceil(entity.yPos)-playerEntity.yPos+state.windowHeight/2-playerEntity.height/2,entity.height,entity.width);
 }
 float genPlayerMovAnglRad(){
     return atan2(keyboardState[SDL_SCANCODE_S]-keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_D]-keyboardState[SDL_SCANCODE_A]);

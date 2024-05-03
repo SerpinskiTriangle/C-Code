@@ -39,7 +39,7 @@ int main(){
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
 
         for (int entity = 0; entity < entityCount; entity++){
-            drawEntHitbox(state.renderer,*gameEntities[entity]);
+            drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
 
             if (gameEntities[entity]->tags & TAG_PLAYER){
                 gameEntities[entity]->moveAngleRad = genPlayerMovAnglRad();

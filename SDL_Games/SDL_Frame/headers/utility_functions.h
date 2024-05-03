@@ -40,7 +40,7 @@
     extern struct state state;
 
     void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w);
-    void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity);
+    void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity, struct entity playerEntity);
     int collideStatus(float ent1X, float ent1Y, int ent1H, int  ent1W, float ent2X, float ent2Y, int ent2H, int ent2W);
     void summonEntity(float xPos, float yPos, float xSpeed, float ySpeed, int width, int height, float entSpeed, int faceAngleDeg, float moveAngleRad, int tags);
     float genPlayerMovAnglRad();
