@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -I../include
+CFLAGS = -Wall -Wextra -std=c11 -I../include -Iheaders/
 LDFLAGS = -lSDL2 -L../lib -lm
 
 SRCS = $(wildcard src/*.c)
