@@ -8,7 +8,7 @@
     #define TAG_PLAYER         (1 << 4)
     #define TAG_PLAYER_SEEKING (1 << 5)
 
-    #define MAX_ENTITY_COUNT 7
+    #define MAX_ENTITY_COUNT 100    
 
     struct state {
         SDL_Window* window;
@@ -30,6 +30,8 @@
         int faceAngleDeg;
         float moveAngleRad;
         int tags;
+        int index;
+        int health;
     };
 
     extern struct state state;
@@ -42,6 +44,9 @@
     void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w);
     void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity, struct entity playerEntity);
     int collideStatus(float ent1X, float ent1Y, int ent1H, int  ent1W, float ent2X, float ent2Y, int ent2H, int ent2W);
-    void summonEntity(float xPos, float yPos, float xSpeed, float ySpeed, int width, int height, float entSpeed, int faceAngleDeg, float moveAngleRad, int tags);
+    int collideStatusEnt(struct entity entity1,struct entity entity2);
+    void summonEntity(float xPos, float yPos, float xSpeed, float ySpeed, int width, int height, float entSpeed, int faceAngleDeg, float moveAngleRad, int tags,int health);
     float genPlayerMovAnglRad();
+    void destroyEntity(int index);
+    void resolveWallCollision(struct entity entity, struct entity wall);
 #endif

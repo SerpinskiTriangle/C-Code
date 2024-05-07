@@ -14,13 +14,12 @@ int main(){
 
     gameEntities = (struct entity**)malloc(sizeof(struct entity*)*MAX_ENTITY_COUNT);
 
-    summonEntity(0,0,0,0,50,50, 5,0,0,TAG_ENTITY + TAG_PLAYER);
-    summonEntity(100,100,0,0,50,350, 0,0,0,TAG_WALL);
-    summonEntity(150,400,0,0,250,50, 0,0,0,TAG_WALL);
-    summonEntity(400,100,0,0,50,350, 0,0,0,TAG_WALL);
-    summonEntity(230,100,0,0,170,50, 0,0,0,TAG_WALL);
-    summonEntity(200,200,0,0,30,30,2,0,0,TAG_ENTITY + TAG_PLAYER_SEEKING);
-
+    summonEntity(0,0,0,0,50,50, 5,0,0,TAG_ENTITY + TAG_PLAYER,100);
+    summonEntity(100,100,0,0,50,350,0,0,0,TAG_WALL,100);
+    summonEntity(150,400,0,0,250,50,0,0,0,TAG_WALL,100);
+    summonEntity(400,100,0,0,50,350,0,0,0,TAG_WALL,100);
+    summonEntity(230,100,0,0,170,50,0,0,0,TAG_WALL,100);
+    summonEntity(200,200,0,0,30,30,2,0,0,TAG_ENTITY + TAG_PLAYER_SEEKING,100);
 
     while (state.running){
         SDL_RenderClear(state.renderer);
@@ -39,6 +38,10 @@ int main(){
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
 
         for (int entity = 0; entity < entityCount; entity++){
+            if (gameEntities[entity]->health <= 0){
+                destroyEntity(gameEntities[entity]->index);
+                continue;
+            }
             drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
 
             if (gameEntities[entity]->tags & TAG_PLAYER){
@@ -52,16 +55,28 @@ int main(){
             gameEntities[entity]->ySpeed = sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
 
             for (int collideEntity = 0; collideEntity < entityCount; collideEntity++){
-                if (collideStatus(gameEntities[entity]->xPos + gameEntities[entity]->xSpeed,gameEntities[entity]->yPos,gameEntities[entity]->height,gameEntities[entity]->width,gameEntities[collideEntity]->xPos,gameEntities[collideEntity]->yPos,gameEntities[collideEntity]->height,gameEntities[collideEntity]->width)){
-                    if (gameEntities[collideEntity]->tags & TAG_WALL){
-                        gameEntities[entity]->xSpeed = 0;
-                    }
+                if(entity == collideEntity){
+                    continue;
                 }
-                if (collideStatus(gameEntities[entity]->xPos,gameEntities[entity]->yPos + gameEntities[entity]->ySpeed,gameEntities[entity]->height,gameEntities[entity]->width,gameEntities[collideEntity]->xPos,gameEntities[collideEntity]->yPos ,gameEntities[collideEntity]->height,gameEntities[collideEntity]->width)){
-                    if (gameEntities[collideEntity]->tags & TAG_WALL){
-                        gameEntities[entity]->ySpeed = 0;
-                    }
+                //collision detection
+                if (collideStatusEnt(*gameEntities[entity],*gameEntities[collideEntity])){
+                    //collision resolution
+                    
+                    //if(gameEntities[entity]->tags & TAG_PROJECTILE){
+                    //    destroyEntity(gameEntities[entity]->index);
+                    //    gameEntities[collideEntity]->health -= 20;
+                    //}
                 }
+                //wall collision detection happens 1 frame in the future  
+                if(gameEntities[collideEntity]->tags & TAG_WALL){
+                    resolveWallCollision(*gameEntities[entity],*gameEntities[collideEntity]);
+                }
+                
+
+
+
+
+
             }
 
             if (gameEntities[entity]->tags & TAG_PLAYER){
@@ -71,12 +86,18 @@ int main(){
                 }
             }
             
+
             gameEntities[entity]->xPos += gameEntities[entity]->xSpeed;
             gameEntities[entity]->yPos += gameEntities[entity]->ySpeed;
 
         }
 
-        printf("\r W:%d  A:%d  S:%d  D:%d",keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        if (keyboardState[SDL_SCANCODE_SPACE]){
+            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,5,5,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,100);
+            printf("well,");        
+        }
+
+        printf("\rW:%d  A:%d  S:%d  D:%d",keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
         fflush(stdout);
 
         SDL_RenderPresent(state.renderer);
