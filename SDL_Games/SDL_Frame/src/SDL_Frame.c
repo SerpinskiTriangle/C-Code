@@ -39,6 +39,7 @@ int main(){
         SDL_RenderClear(state.renderer);
 
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
+        drawGrid();
 
         for (int entity = 0; entity < entityCount; entity++){
             if (gameEntities[entity]->health <= 0){

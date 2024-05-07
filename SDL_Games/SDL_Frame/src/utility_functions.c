@@ -2,7 +2,7 @@
 #include <SDL.h>
 
 
-struct state state;
+struct state state; 
 int entityCount = 0;
 int destroyQueuedCount = 0;
 int *allocTable;
@@ -67,4 +67,17 @@ void queueDestroy(struct entity *entity){
         return;
     }
     printf("double");
+}
+void drawGrid(){
+    for(int order = 0; order <= 3; order++){
+        SDL_SetRenderDrawColor(state.renderer,4*pow(2,order),4*pow(2,order),4*pow(2,order),255);
+        for(int i = 0; i <= 12; i++){
+            SDL_RenderDrawLineF(state.renderer,50*pow(2,order)*i -((int)gameEntities[0]->xPos % (int)(50*pow(2,order))),0,50*pow(2,order)*i -((int)gameEntities[0]->xPos % (int)(50*pow(2,order))),state.windowHeight);
+        }
+        for(int i = 0; i <= 12; i++){
+            SDL_RenderDrawLineF(state.renderer,0,50*pow(2,order)*i -((int)gameEntities[0]->yPos % (int)(50*pow(2,order))),state.windowWidth,50*pow(2,order)*i -((int)gameEntities[0]->yPos % (int)(50*pow(2,order))));
+        }
+    }
+    
+    SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
 }

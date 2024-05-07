@@ -54,4 +54,5 @@
     void destroyEntity(struct entity *entity);
     void resolveWallCollision(struct entity entity, struct entity wall);
     void queueDestroy(struct entity *entity);
+    void drawGrid();
 #endif
