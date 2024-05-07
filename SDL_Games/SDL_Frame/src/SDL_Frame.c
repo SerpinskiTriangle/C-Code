@@ -16,10 +16,10 @@ int main(){
     destroyQueue = (struct entity**)malloc(sizeof(struct entity*)*MAX_ENTITY_COUNT);// :(
 
     summonEntity(0,0,0,0,50,50, 5,0,0,TAG_ENTITY + TAG_PLAYER,100);
-    summonEntity(100,100,0,0,50,350,0,0,0,TAG_WALL,100);
-    summonEntity(150,400,0,0,250,50,0,0,0,TAG_WALL,100);
-    summonEntity(400,100,0,0,50,350,0,0,0,TAG_WALL,100);
-    summonEntity(230,100,0,0,170,50,0,0,0,TAG_WALL,100);
+    summonEntity(100,100,0,0,50,350,1,0,0,TAG_WALL,100);
+    summonEntity(150,400,0,0,250,50,1,0,0,TAG_WALL,100);
+    summonEntity(400,100,0,0,50,350,1,0,0,TAG_WALL,100);
+    summonEntity(230,100,0,0,170,50,1,0,0,TAG_WALL,100);
     summonEntity(200,200,0,0,30,30,2,0,0,TAG_ENTITY + TAG_PLAYER_SEEKING,100);
 
 
@@ -40,11 +40,13 @@ int main(){
 
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
         drawGrid();
+        //gameEntities[0]->tags = TAG_ENTITY + TAG_PLAYER; //fo reincarnation
 
         for (int entity = 0; entity < entityCount; entity++){
             if (gameEntities[entity]->health <= 0){
                 queueDestroy(gameEntities[entity]);
-                if(gameEntities[entity]->tags & TAG_PLAYER){
+                if(gameEntities[entity]->tags & TAG_PLAYER){ //for death
+                    state.running = 0;
                     break;
                 }
                 continue;
@@ -58,9 +60,10 @@ int main(){
                 gameEntities[entity]->moveAngleRad = atan2(gameEntities[0]->yPos-gameEntities[entity]->yPos,gameEntities[0]->xPos-gameEntities[entity]->xPos);
             }
 
-            gameEntities[entity]->xSpeed = cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
-            gameEntities[entity]->ySpeed = sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
-
+            if (!(gameEntities[entity]->tags & TAG_WALL)){
+                gameEntities[entity]->xSpeed = cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
+                gameEntities[entity]->ySpeed = sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
+            }
             for (int collideEntity = 0; collideEntity < entityCount; collideEntity++){
                 if(entity == collideEntity){
                     continue;
@@ -99,7 +102,7 @@ int main(){
         destroyQueuedCount = 0;
 
         if (keyboardState[SDL_SCANCODE_SPACE]){
-            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);  
+            summonEntity(gameEntities[0]->xPos-100,gameEntities[0]->yPos,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);  
         }
 
         printf("\rW:%d  A:%d  S:%d  D:%d",keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
