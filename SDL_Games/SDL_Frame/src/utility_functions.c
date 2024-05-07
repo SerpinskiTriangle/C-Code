@@ -39,9 +39,9 @@ void destroyEntity(int index){
     if (index == entityCount){
         return;
     }
-    gameEntities[index] = gameEntities[entityCount];
+    gameEntities[index] = gameEntities[entityCount-1];
     gameEntities[index]->index = index;
-    gameEntities[entityCount] = 0;
+    gameEntities[entityCount-1] = 0;
     entityCount--;
 }
 void resolveWallCollision(struct entity entity, struct entity wall){

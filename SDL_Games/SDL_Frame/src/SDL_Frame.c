@@ -61,7 +61,6 @@ int main(){
                 //collision detection
                 if (collideStatusEnt(*gameEntities[entity],*gameEntities[collideEntity])){
                     //collision resolution
-                    
                     //if(gameEntities[entity]->tags & TAG_PROJECTILE){
                     //    destroyEntity(gameEntities[entity]->index);
                     //    gameEntities[collideEntity]->health -= 20;
