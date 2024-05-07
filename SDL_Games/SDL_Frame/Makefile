@@ -18,3 +18,5 @@ $(EXEC): $(OBJS)
 
 clean:
 	rm -f $(EXEC) $(OBJS)
+run: clean $(EXEC) 
+	./$(EXEC)
