@@ -36,11 +36,13 @@
 
     extern struct state state;
     extern int entityCount;
+    extern int destroyQueuedCount;
     extern int *allocTable;
     extern const Uint8 *keyboardState;
     extern struct entity **gameEntities;
     extern struct entity **destroyQueue;
     extern struct state state;
+
 
     void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w);
     void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity, struct entity playerEntity);
@@ -50,4 +52,5 @@
     float genPlayerMovAnglRad();
     void destroyEntity(struct entity *entity);
     void resolveWallCollision(struct entity entity, struct entity wall);
+    void queueDestroy(struct entity *entity);
 #endif

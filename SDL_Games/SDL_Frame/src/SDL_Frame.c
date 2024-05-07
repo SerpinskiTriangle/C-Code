@@ -66,7 +66,7 @@ int main(){
                 //collision detection
                 if (collideStatusEnt(*gameEntities[entity],*gameEntities[collideEntity])){
                     //if(gameEntities[entity]->tags & TAG_PROJECTILE){
-                    //    destroyEntity(gameEntities[entity]->index);
+                    //    
                     //    gameEntities[collideEntity]->health -= 20;
                     //}
                 }
@@ -95,6 +95,10 @@ int main(){
 
         }
 
+        //clearing destroyQueue
+        for (int i = 0; i < destroyQueuedCount; i++){
+            destroyEntity(destroyQueue[i]);
+        }
         if (keyboardState[SDL_SCANCODE_SPACE]){
             summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,5,5,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,100);
             printf("well,");        

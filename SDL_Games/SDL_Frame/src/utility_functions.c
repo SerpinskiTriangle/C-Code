@@ -3,7 +3,8 @@
 
 
 struct state state;
-int entityCount;
+int entityCount = 0;
+int destroyQueuedCount = 0;
 int *allocTable;
 const Uint8 *keyboardState;
 struct entity **gameEntities;
@@ -57,4 +58,8 @@ void resolveWallCollision(struct entity entity, struct entity wall){
 }
 int collideStatusEnt(struct entity entity1,struct entity entity2){
     return (collideStatus(entity1.xPos,entity1.yPos,entity1.height,entity1.width,entity2.xPos,entity2.yPos,entity2.height,entity2.width));
+}
+void queueDestroy(struct entity *entity){
+    destroyQueue[destroyQueuedCount] = entity;
+    destroyQueuedCount++;
 }
