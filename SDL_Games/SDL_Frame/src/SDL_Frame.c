@@ -41,13 +41,13 @@ int main(){
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
 
         for (int entity = 0; entity < entityCount; entity++){
-            //if (gameEntities[entity]->health <= 0){
-            //    queueDestroy(gameEntities[entity]);
-            //    if(gameEntities[entity]->tags & TAG_PLAYER){
-            //        break;
-            //    }
-            //    continue;
-            //}
+            if (gameEntities[entity]->health <= 0){
+                queueDestroy(gameEntities[entity]);
+                if(gameEntities[entity]->tags & TAG_PLAYER){
+                    break;
+                }
+                continue;
+            }
             drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
 
             if (gameEntities[entity]->tags & TAG_PLAYER){
@@ -98,7 +98,7 @@ int main(){
         destroyQueuedCount = 0;
 
         if (keyboardState[SDL_SCANCODE_SPACE]){
-            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,0.1,0.1,20,20,0.1,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);  
+            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);  
         }
 
         printf("\rW:%d  A:%d  S:%d  D:%d",keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
