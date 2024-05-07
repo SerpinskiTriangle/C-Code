@@ -60,6 +60,11 @@ int collideStatusEnt(struct entity entity1,struct entity entity2){
     return (collideStatus(entity1.xPos,entity1.yPos,entity1.height,entity1.width,entity2.xPos,entity2.yPos,entity2.height,entity2.width));
 }
 void queueDestroy(struct entity *entity){
-    destroyQueue[destroyQueuedCount] = entity;
-    destroyQueuedCount++;
+    if (!(entity->tags & TAG_QUEUED_DESTROY)){
+        entity->tags |= TAG_QUEUED_DESTROY;
+        destroyQueue[destroyQueuedCount] = entity;
+        destroyQueuedCount++;
+        return;
+    }
+    printf("double");
 }

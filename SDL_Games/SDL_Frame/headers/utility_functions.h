@@ -7,6 +7,7 @@
     #define TAG_PROJECTILE     (1 << 3)
     #define TAG_PLAYER         (1 << 4)
     #define TAG_PLAYER_SEEKING (1 << 5)
+    #define TAG_QUEUED_DESTROY (1 << 6)
 
     #define MAX_ENTITY_COUNT 100    
 

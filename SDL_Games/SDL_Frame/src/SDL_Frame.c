@@ -22,7 +22,6 @@ int main(){
     summonEntity(230,100,0,0,170,50,0,0,0,TAG_WALL,100);
     summonEntity(200,200,0,0,30,30,2,0,0,TAG_ENTITY + TAG_PLAYER_SEEKING,100);
 
-    queueDestroy(gameEntities[5]);
 
 
     while (state.running){
@@ -42,10 +41,13 @@ int main(){
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
 
         for (int entity = 0; entity < entityCount; entity++){
-            if (gameEntities[entity]->health <= 0){
-                queueDestroy(gameEntities[entity]);
-                continue;
-            }
+            //if (gameEntities[entity]->health <= 0){
+            //    queueDestroy(gameEntities[entity]);
+            //    if(gameEntities[entity]->tags & TAG_PLAYER){
+            //        break;
+            //    }
+            //    continue;
+            //}
             drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
 
             if (gameEntities[entity]->tags & TAG_PLAYER){
@@ -96,8 +98,7 @@ int main(){
         destroyQueuedCount = 0;
 
         if (keyboardState[SDL_SCANCODE_SPACE]){
-            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,5,5,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);
-            printf("well,");        
+            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,0.1,0.1,20,20,0.1,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);  
         }
 
         printf("\rW:%d  A:%d  S:%d  D:%d",keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
