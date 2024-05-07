@@ -22,8 +22,7 @@ int main(){
     summonEntity(230,100,0,0,170,50,0,0,0,TAG_WALL,100);
     summonEntity(200,200,0,0,30,30,2,0,0,TAG_ENTITY + TAG_PLAYER_SEEKING,100);
 
-    destroyEntity(gameEntities[5]);
-    destroyEntity(gameEntities[3]);
+    queueDestroy(gameEntities[5]);
 
 
     while (state.running){
@@ -44,7 +43,7 @@ int main(){
 
         for (int entity = 0; entity < entityCount; entity++){
             if (gameEntities[entity]->health <= 0){
-                destroyEntity(gameEntities[entity]->index);
+                queueDestroy(gameEntities[entity]);
                 continue;
             }
             drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
@@ -65,21 +64,15 @@ int main(){
                 }
                 //collision detection
                 if (collideStatusEnt(*gameEntities[entity],*gameEntities[collideEntity])){
-                    //if(gameEntities[entity]->tags & TAG_PROJECTILE){
-                    //    
-                    //    gameEntities[collideEntity]->health -= 20;
-                    //}
+                    if(gameEntities[entity]->tags & TAG_PROJECTILE){
+                        queueDestroy(gameEntities[entity]);
+                        gameEntities[collideEntity]->health -= 20;//note that because walls posses the limitless technique, projectiles never "hit" them
+                    }
                 }
                 //wall collision detection happens 1 frame in the future  
                 if(gameEntities[collideEntity]->tags & TAG_WALL){
                     resolveWallCollision(*gameEntities[entity],*gameEntities[collideEntity]);
                 }
-                
-
-
-
-
-
             }
 
             if (gameEntities[entity]->tags & TAG_PLAYER){
@@ -98,9 +91,12 @@ int main(){
         //clearing destroyQueue
         for (int i = 0; i < destroyQueuedCount; i++){
             destroyEntity(destroyQueue[i]);
+            destroyQueue[i] = 0;
         }
+        destroyQueuedCount = 0;
+
         if (keyboardState[SDL_SCANCODE_SPACE]){
-            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,5,5,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,100);
+            summonEntity(gameEntities[0]->xPos+100,gameEntities[0]->yPos-100,5,5,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);
             printf("well,");        
         }
 
