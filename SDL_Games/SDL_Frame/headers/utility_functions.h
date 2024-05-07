@@ -30,7 +30,7 @@
         int faceAngleDeg;
         float moveAngleRad;
         int tags;
-        int index;
+        int index;//pointer arithmetic replacement later
         int health;
     };
 
@@ -39,6 +39,7 @@
     extern int *allocTable;
     extern const Uint8 *keyboardState;
     extern struct entity **gameEntities;
+    extern struct entity **destroyQueue;
     extern struct state state;
 
     void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w);
@@ -47,6 +48,6 @@
     int collideStatusEnt(struct entity entity1,struct entity entity2);
     void summonEntity(float xPos, float yPos, float xSpeed, float ySpeed, int width, int height, float entSpeed, int faceAngleDeg, float moveAngleRad, int tags,int health);
     float genPlayerMovAnglRad();
-    void destroyEntity(int index);
+    void destroyEntity(struct entity *entity);
     void resolveWallCollision(struct entity entity, struct entity wall);
 #endif

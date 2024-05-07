@@ -7,6 +7,7 @@ int entityCount;
 int *allocTable;
 const Uint8 *keyboardState;
 struct entity **gameEntities;
+struct entity ** destroyQueue;
 struct state state = {NULL,NULL,{0},600,600,1};
 
 void summonEntity(float xPos, float yPos, float xSpeed, float ySpeed, int width, int height, float entSpeed, int faceAngleDeg, float moveAngleRad, int tags, int health){
@@ -34,9 +35,11 @@ void drawEntHitbox(struct SDL_Renderer *renderer, struct entity entity, struct e
 float genPlayerMovAnglRad(){
     return atan2(keyboardState[SDL_SCANCODE_S]-keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_D]-keyboardState[SDL_SCANCODE_A]);
 }
-void destroyEntity(int index){
-    free(gameEntities[index]);
-    if (index == entityCount){
+void destroyEntity(struct entity *entity){
+    int index = entity->index;
+    free(entity);
+    if (index == entityCount-1){
+        entityCount--;
         return;
     }
     gameEntities[index] = gameEntities[entityCount-1];
@@ -47,11 +50,9 @@ void destroyEntity(int index){
 void resolveWallCollision(struct entity entity, struct entity wall){
     if (collideStatus(entity.xPos+entity.xSpeed,entity.yPos,entity.height,entity.width,wall.xPos,wall.yPos,wall.height,wall.width)){
         gameEntities[entity.index]->xSpeed = 0;
-        printf("C %d-%dx",entity.index,wall.index);
     }
     if (collideStatus(entity.xPos,entity.yPos+entity.ySpeed,entity.height,entity.width,wall.xPos,wall.yPos,wall.height,wall.width)){
         gameEntities[entity.index]->ySpeed = 0;
-        printf("C %d-%dy",entity.index,wall.index);
     }
 }
 int collideStatusEnt(struct entity entity1,struct entity entity2){

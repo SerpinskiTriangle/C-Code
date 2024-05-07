@@ -13,6 +13,7 @@ int main(){
     SDL_RenderClear(state.renderer);
 
     gameEntities = (struct entity**)malloc(sizeof(struct entity*)*MAX_ENTITY_COUNT);
+    destroyQueue = (struct entity**)malloc(sizeof(struct entity*)*MAX_ENTITY_COUNT);// :(
 
     summonEntity(0,0,0,0,50,50, 5,0,0,TAG_ENTITY + TAG_PLAYER,100);
     summonEntity(100,100,0,0,50,350,0,0,0,TAG_WALL,100);
@@ -20,6 +21,10 @@ int main(){
     summonEntity(400,100,0,0,50,350,0,0,0,TAG_WALL,100);
     summonEntity(230,100,0,0,170,50,0,0,0,TAG_WALL,100);
     summonEntity(200,200,0,0,30,30,2,0,0,TAG_ENTITY + TAG_PLAYER_SEEKING,100);
+
+    destroyEntity(gameEntities[5]);
+    destroyEntity(gameEntities[3]);
+
 
     while (state.running){
         SDL_RenderClear(state.renderer);
@@ -60,7 +65,6 @@ int main(){
                 }
                 //collision detection
                 if (collideStatusEnt(*gameEntities[entity],*gameEntities[collideEntity])){
-                    //collision resolution
                     //if(gameEntities[entity]->tags & TAG_PROJECTILE){
                     //    destroyEntity(gameEntities[entity]->index);
                     //    gameEntities[collideEntity]->health -= 20;
@@ -110,6 +114,7 @@ int main(){
 
 
     free(gameEntities);
+    free(destroyQueue);
 
     SDL_DestroyRenderer(state.renderer);
     SDL_DestroyWindow(state.window);
