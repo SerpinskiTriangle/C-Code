@@ -54,14 +54,14 @@ int main(){
             drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
             if (gameEntities[entity]->tags & TAG_PLAYER){
                 if (!((keyboardState[SDL_SCANCODE_S] ^ keyboardState[SDL_SCANCODE_W]) || (keyboardState[SDL_SCANCODE_D] ^ keyboardState[SDL_SCANCODE_A]))){
-                    gameEntities[entity]->xSpeed /=1.1;
-                    gameEntities[entity]->ySpeed /=1.1;
                     gameEntities[entity]->still = 1;
                 }
                 else{
                     gameEntities[entity]->still = 0;
                 }
             }
+            gameEntities[entity]->xSpeed /=1.1;
+            gameEntities[entity]->ySpeed /=1.1;
             if (gameEntities[entity]->tags & TAG_PLAYER){
                 gameEntities[entity]->moveAngleRad = genPlayerMovAnglRad();
             }
