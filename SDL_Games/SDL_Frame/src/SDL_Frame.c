@@ -52,7 +52,16 @@ int main(){
                 continue;
             }
             drawEntHitbox(state.renderer,*gameEntities[entity],*gameEntities[0]);
-
+            if (gameEntities[entity]->tags & TAG_PLAYER){
+                if (!((keyboardState[SDL_SCANCODE_S] ^ keyboardState[SDL_SCANCODE_W]) || (keyboardState[SDL_SCANCODE_D] ^ keyboardState[SDL_SCANCODE_A]))){
+                    gameEntities[entity]->xSpeed /=1.1;
+                    gameEntities[entity]->ySpeed /=1.1;
+                    gameEntities[entity]->still = 1;
+                }
+                else{
+                    gameEntities[entity]->still = 0;
+                }
+            }
             if (gameEntities[entity]->tags & TAG_PLAYER){
                 gameEntities[entity]->moveAngleRad = genPlayerMovAnglRad();
             }
@@ -60,9 +69,9 @@ int main(){
                 gameEntities[entity]->moveAngleRad = atan2(gameEntities[0]->yPos-gameEntities[entity]->yPos,gameEntities[0]->xPos-gameEntities[entity]->xPos);
             }
 
-            if (!(gameEntities[entity]->tags & TAG_WALL) & !gameEntities[entity]->still){
-                accelerate(&gameEntities[entity]->xSpeed, cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed, 5);
-                accelerate(&gameEntities[entity]->ySpeed, sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed, 5);
+            if (!(gameEntities[entity]->tags & TAG_WALL) && !gameEntities[entity]->still){
+                accelerate(&gameEntities[entity]->xSpeed, cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed * !gameEntities[entity]->still, 5);
+                accelerate(&gameEntities[entity]->ySpeed, sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed * !gameEntities[entity]->still, 5);
             }
             for (int collideEntity = 0; collideEntity < entityCount; collideEntity++){
                 if(entity == collideEntity){
@@ -78,17 +87,6 @@ int main(){
                 //wall collision detection happens 1 frame in the future 
                 if(gameEntities[collideEntity]->tags & TAG_WALL){
                     resolveWallCollision(*gameEntities[entity],*gameEntities[collideEntity]);
-                }
-            }
-
-            if (gameEntities[entity]->tags & TAG_PLAYER){
-                if (!((keyboardState[SDL_SCANCODE_S] ^ keyboardState[SDL_SCANCODE_W]) || (keyboardState[SDL_SCANCODE_D] ^ keyboardState[SDL_SCANCODE_A]))){
-                    gameEntities[entity]->xSpeed = 0;
-                    gameEntities[entity]->ySpeed = 0;
-                    gameEntities[entity]->still = 1;
-                }
-                else{
-                    gameEntities[entity]->still = 0;
                 }
             }
             gameEntities[entity]->xPos += gameEntities[entity]->xSpeed;
