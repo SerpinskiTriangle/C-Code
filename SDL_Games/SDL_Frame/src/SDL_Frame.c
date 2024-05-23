@@ -104,7 +104,7 @@ int main(){
             summonEntity(gameEntities[0]->xPos-100,gameEntities[0]->yPos,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,10);  
         }
 
-        printf("\r Ang: %e W:%d  A:%d  S:%d  D:%d",gameEntities[0]->moveAngleRad, keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        printf("\r X: %d  Y: %d W:%d  A:%d  S:%d  D:%d",(int)gameEntities[0]->xPos,(int)gameEntities[0]->yPos, keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
         fflush(stdout);
 
         SDL_RenderPresent(state.renderer);

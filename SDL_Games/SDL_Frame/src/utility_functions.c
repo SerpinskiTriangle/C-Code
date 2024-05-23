@@ -66,7 +66,6 @@ void queueDestroy(struct entity *entity){
         destroyQueuedCount++;
         return;
     }
-    printf("double");
 }
 void drawGrid(){
     for(int order = 0; order <= 4; order++){
@@ -85,7 +84,6 @@ int sign(float num){
     return (num >= 0) - (num < 0);
 }
 void accelerate(float *entSpeed, float addSpeed, float speedCap){
-    printf("in:%e",addSpeed);
     if ((fabs(*entSpeed + addSpeed)<=speedCap)){
         *entSpeed += addSpeed;
         return;
@@ -94,5 +92,4 @@ void accelerate(float *entSpeed, float addSpeed, float speedCap){
         *entSpeed = speedCap*sign(addSpeed);
         return;
     }
-    printf("none");
 }
