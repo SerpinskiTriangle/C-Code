@@ -7,7 +7,7 @@
 
 
 int main(){
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO);   
     SDL_CreateWindowAndRenderer(state.windowWidth,state.windowHeight,0,&state.window,&state.renderer);
 
     SDL_RenderClear(state.renderer);
@@ -15,7 +15,7 @@ int main(){
     gameEntities = (struct entity**)malloc(sizeof(struct entity*)*MAX_ENTITY_COUNT);
     destroyQueue = (struct entity**)malloc(sizeof(struct entity*)*MAX_ENTITY_COUNT);// :(
 
-    summonEntity(0,0,0,0,50,50, 5,0,0,TAG_ENTITY + TAG_PLAYER,100);
+    summonEntity(0,0,30,0,50,50,5,0,0,TAG_ENTITY + TAG_PLAYER,100);
     summonEntity(100,100,0,0,50,350,1,0,0,TAG_WALL,100);
     summonEntity(150,400,0,0,250,50,1,0,0,TAG_WALL,100);
     summonEntity(400,100,0,0,50,350,1,0,0,TAG_WALL,100);
@@ -40,7 +40,7 @@ int main(){
 
         SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
         drawGrid();
-        //gameEntities[0]->tags = TAG_ENTITY + TAG_PLAYER; //fo reincarnation
+        //gameEntities[0]->tags = TAG_ENTITY + TAG_PLAYER; //for reincarnation
 
         for (int entity = 0; entity < entityCount; entity++){
             if (gameEntities[entity]->health <= 0){
@@ -60,9 +60,9 @@ int main(){
                 gameEntities[entity]->moveAngleRad = atan2(gameEntities[0]->yPos-gameEntities[entity]->yPos,gameEntities[0]->xPos-gameEntities[entity]->xPos);
             }
 
-            if (!(gameEntities[entity]->tags & TAG_WALL)){
-                gameEntities[entity]->xSpeed = cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
-                gameEntities[entity]->ySpeed = sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed;
+            if (!(gameEntities[entity]->tags & TAG_WALL) & !gameEntities[entity]->still){
+                accelerate(&gameEntities[entity]->xSpeed, cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed, 5);
+                accelerate(&gameEntities[entity]->ySpeed, sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed, 5);
             }
             for (int collideEntity = 0; collideEntity < entityCount; collideEntity++){
                 if(entity == collideEntity){
@@ -72,10 +72,10 @@ int main(){
                 if (collideStatusEnt(*gameEntities[entity],*gameEntities[collideEntity])){
                     if(gameEntities[entity]->tags & TAG_PROJECTILE){
                         queueDestroy(gameEntities[entity]);
-                        gameEntities[collideEntity]->health -= 20;//note that because walls posses the limitless technique, projectiles never "hit" them
+                        gameEntities[collideEntity]->health -= 20;//note that because walls possess the limitless technique, projectiles never "hit" them
                     }
                 }
-                //wall collision detection happens 1 frame in the future  
+                //wall collision detection happens 1 frame in the future 
                 if(gameEntities[collideEntity]->tags & TAG_WALL){
                     resolveWallCollision(*gameEntities[entity],*gameEntities[collideEntity]);
                 }
@@ -85,13 +85,14 @@ int main(){
                 if (!((keyboardState[SDL_SCANCODE_S] ^ keyboardState[SDL_SCANCODE_W]) || (keyboardState[SDL_SCANCODE_D] ^ keyboardState[SDL_SCANCODE_A]))){
                     gameEntities[entity]->xSpeed = 0;
                     gameEntities[entity]->ySpeed = 0;
+                    gameEntities[entity]->still = 1;
+                }
+                else{
+                    gameEntities[entity]->still = 0;
                 }
             }
-            
-
             gameEntities[entity]->xPos += gameEntities[entity]->xSpeed;
             gameEntities[entity]->yPos += gameEntities[entity]->ySpeed;
-
         }
 
         //clearing destroyQueue
@@ -102,10 +103,10 @@ int main(){
         destroyQueuedCount = 0;
 
         if (keyboardState[SDL_SCANCODE_SPACE]){
-            summonEntity(gameEntities[0]->xPos-100,gameEntities[0]->yPos,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,1<<7);  
+            summonEntity(gameEntities[0]->xPos-100,gameEntities[0]->yPos,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,10);  
         }
 
-        printf("\rW:%d  A:%d  S:%d  D:%d",keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        printf("\r Ang: %e W:%d  A:%d  S:%d  D:%d",gameEntities[0]->moveAngleRad, keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
         fflush(stdout);
 
         SDL_RenderPresent(state.renderer);

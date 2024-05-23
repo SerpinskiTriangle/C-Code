@@ -33,6 +33,7 @@
         int tags;
         int index;//pointer arithmetic replacement later
         int health;
+        uint8_t still;
     };
 
     extern struct state state;
@@ -55,4 +56,6 @@
     void resolveWallCollision(struct entity entity, struct entity wall);
     void queueDestroy(struct entity *entity);
     void drawGrid();
+    int sign(float num);
+    void accelerate(float *entSpeed, float addSpeed, float speedCap);
 #endif

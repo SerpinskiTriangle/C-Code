@@ -81,3 +81,18 @@ void drawGrid(){
     
     SDL_SetRenderDrawColor(state.renderer,255,255,255,255);
 }
+int sign(float num){
+    return (num >= 0) - (num < 0);
+}
+void accelerate(float *entSpeed, float addSpeed, float speedCap){
+    printf("in:%e",addSpeed);
+    if ((fabs(*entSpeed + addSpeed)<=speedCap)){
+        *entSpeed += addSpeed;
+        return;
+    }
+    if (fabs(*entSpeed) < speedCap){
+        *entSpeed = speedCap*sign(addSpeed);
+        return;
+    }
+    printf("none");
+}
