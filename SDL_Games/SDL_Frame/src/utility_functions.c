@@ -93,3 +93,9 @@ void accelerate(float *entSpeed, float addSpeed, float speedCap){
         return;
     }
 }
+float centerDistX(struct entity *entity1,struct entity *entity2){
+    return entity2->xPos - entity1->xPos - entity1->width/2 + entity2->width/2;
+}
+float centerDistY(struct entity *entity1,struct entity *entity2){
+    return entity2->yPos - entity1->yPos - entity1->height/2 + entity2->height/2;
+}

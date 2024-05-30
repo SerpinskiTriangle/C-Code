@@ -58,4 +58,6 @@
     void drawGrid();
     int sign(float num);
     void accelerate(float *entSpeed, float addSpeed, float speedCap);
+    float centerDistX(struct entity *entity1,struct entity *entity2);//maybe there'll be only one someday
+    float centerDistY(struct entity *entity1,struct entity *entity2);
 #endif

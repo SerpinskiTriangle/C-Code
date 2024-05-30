@@ -66,12 +66,12 @@ int main(){
                 gameEntities[entity]->moveAngleRad = genPlayerMovAnglRad();
             }
             if (gameEntities[entity]->tags & TAG_PLAYER_SEEKING){
-                gameEntities[entity]->moveAngleRad = atan2(gameEntities[0]->yPos-gameEntities[entity]->yPos,gameEntities[0]->xPos-gameEntities[entity]->xPos);
+                gameEntities[entity]->moveAngleRad = atan2(centerDistY(gameEntities[entity], gameEntities[0]),centerDistX(gameEntities[entity], gameEntities[0]));
             }
 
             if (!(gameEntities[entity]->tags & TAG_WALL) && !gameEntities[entity]->still){
-                accelerate(&gameEntities[entity]->xSpeed, cos(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed * !gameEntities[entity]->still, 5);
-                accelerate(&gameEntities[entity]->ySpeed, sin(gameEntities[entity]->moveAngleRad) * gameEntities[entity]->entSpeed * !gameEntities[entity]->still, 5);
+                accelerate(&gameEntities[entity]->xSpeed, cos(gameEntities[entity]->moveAngleRad) * !gameEntities[entity]->still, gameEntities[entity]->entSpeed);
+                accelerate(&gameEntities[entity]->ySpeed, sin(gameEntities[entity]->moveAngleRad) * !gameEntities[entity]->still, gameEntities[entity]->entSpeed);
             }
             for (int collideEntity = 0; collideEntity < entityCount; collideEntity++){
                 if(entity == collideEntity){
@@ -82,6 +82,10 @@ int main(){
                     if(gameEntities[entity]->tags & TAG_PROJECTILE){
                         queueDestroy(gameEntities[entity]);
                         gameEntities[collideEntity]->health -= 20;//note that because walls possess the limitless technique, projectiles never "hit" them
+                    }
+                    if(gameEntities[entity]->tags & gameEntities[collideEntity]->tags & TAG_ENTITY){
+                        accelerate(&gameEntities[entity]->xSpeed, 30*-1/(centerDistX(gameEntities[entity], gameEntities[collideEntity])), 2);
+                        accelerate(&gameEntities[entity]->ySpeed, 30*-1/(centerDistY(gameEntities[entity], gameEntities[collideEntity])), 2);
                     }
                 }
                 //wall collision detection happens 1 frame in the future 
@@ -104,7 +108,7 @@ int main(){
             summonEntity(gameEntities[0]->xPos-100,gameEntities[0]->yPos,0,0,20,20,5,0,gameEntities[0]->moveAngleRad,TAG_PROJECTILE,10);  
         }
 
-        printf("\r X: %d  Y: %d W:%d  A:%d  S:%d  D:%d",(int)gameEntities[0]->xPos,(int)gameEntities[0]->yPos, keyboardState[SDL_SCANCODE_W],keyboardState[SDL_SCANCODE_A],keyboardState[SDL_SCANCODE_S],keyboardState[SDL_SCANCODE_D]);
+        printf("\r X: %d  Y: %d Xdist: %d Ydist: %d",(int)gameEntities[0]->xPos,(int)gameEntities[0]->yPos,(int)centerDistX(gameEntities[0],gameEntities[5]),(int)centerDistY(gameEntities[0],gameEntities[5]));
         fflush(stdout);
 
         SDL_RenderPresent(state.renderer);
