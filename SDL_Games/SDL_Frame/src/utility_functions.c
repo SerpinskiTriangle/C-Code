@@ -13,7 +13,7 @@ struct state state = {NULL,NULL,{0},600,600,1};
 
 void summonEntity(float xPos, float yPos, float xSpeed, float ySpeed, int width, int height, float entSpeed, int faceAngleDeg, float moveAngleRad, int tags, int health){
     gameEntities[entityCount] = (struct entity*)malloc(sizeof(struct entity));
-    *gameEntities[entityCount] = (struct entity){xPos,yPos,xSpeed,ySpeed,width,height,entSpeed,faceAngleDeg,moveAngleRad,tags,entityCount,health};
+    *gameEntities[entityCount] = (struct entity){xPos,yPos,xSpeed,ySpeed,width,height,entSpeed,faceAngleDeg,moveAngleRad,tags,entityCount,health,0};
     entityCount++;
 }
 void drawRect(struct SDL_Renderer *renderer, int x, int y, int h, int w){
