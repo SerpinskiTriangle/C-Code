@@ -88,10 +88,12 @@ int main(){
                         accelerate(&gameEntities[entity]->ySpeed, 30*-1/(centerDistY(gameEntities[entity], gameEntities[collideEntity])), 2);
                     }
                 }
+            }
+            for (int collideEntity = 0; collideEntity < entityCount; collideEntity++){//wall collision is checked and resolved after all other changes to speed
                 //wall collision detection happens 1 frame in the future 
                 if(gameEntities[collideEntity]->tags & TAG_WALL){
                     resolveWallCollision(*gameEntities[entity],*gameEntities[collideEntity]);
-                }
+                    }
             }
             gameEntities[entity]->xPos += gameEntities[entity]->xSpeed;
             gameEntities[entity]->yPos += gameEntities[entity]->ySpeed;
