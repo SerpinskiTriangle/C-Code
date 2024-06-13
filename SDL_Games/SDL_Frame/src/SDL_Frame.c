@@ -84,8 +84,8 @@ int main(){
                         gameEntities[collideEntity]->health -= 20;//note that because walls possess the limitless technique, projectiles never "hit" them
                     }
                     if(gameEntities[entity]->tags & gameEntities[collideEntity]->tags & TAG_ENTITY){
-                        accelerate(&gameEntities[entity]->xSpeed, 30*-1/(centerDistX(gameEntities[entity], gameEntities[collideEntity])), 2);
-                        accelerate(&gameEntities[entity]->ySpeed, 30*-1/(centerDistY(gameEntities[entity], gameEntities[collideEntity])), 2);
+                        accelerate(&gameEntities[entity]->xSpeed, 30*-1/(centerDistX(gameEntities[entity], gameEntities[collideEntity])), 3);
+                        accelerate(&gameEntities[entity]->ySpeed, 30*-1/(centerDistY(gameEntities[entity], gameEntities[collideEntity])), 3);
                     }
                 }
             }
