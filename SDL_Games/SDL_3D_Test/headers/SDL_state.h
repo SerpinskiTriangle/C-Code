@@ -2,7 +2,7 @@
 #define SDL_STATE_H
     #include <SDL.h>
     
-    struct SDL_state {
+    extern struct SDL_state {
         SDL_Window* window;
         SDL_Renderer* renderer;
         const int windowWidth;
