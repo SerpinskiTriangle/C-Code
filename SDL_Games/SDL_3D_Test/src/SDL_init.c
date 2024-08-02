@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include "SDL_init.h"
+#include "SDL_state.h"
 
 void SDL_init(){
     SDL_Init(SDL_INIT_VIDEO);
