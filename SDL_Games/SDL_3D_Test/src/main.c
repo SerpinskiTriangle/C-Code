@@ -1,13 +1,16 @@
 #include <stdio.h>
+#include <SDL.h>
 #include "main.h"
 #include "SDL_init.h"
 #include "vertex.h"
+#include "quit.h"
 
 int main(){
     SDL_init();
     initVertexList();
     running = 1;
     while (running){
+        checkQuit();
         //render
         //update
     }
