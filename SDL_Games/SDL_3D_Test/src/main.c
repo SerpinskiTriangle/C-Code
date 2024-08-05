@@ -9,13 +9,13 @@ unsigned char running;
 
 int main(){
     SDL_init();
-    initVertexList();
+    initVertex3DList();
     running = 1;
-    appendVertex(1,0,-1);
+    appendVertex3D(1,0,-1);
     while (running){
         checkQuit();
         //render
         //update
     }
-    cleanVertexList();
+    cleanVertex3DList();
 }
