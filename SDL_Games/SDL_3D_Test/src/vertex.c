@@ -1,4 +1,4 @@
-#include "vertex.h"
+#include "2DVertex.h"
 
 struct vertex *vertexList = NULL;
 int vertexCount = 0;
