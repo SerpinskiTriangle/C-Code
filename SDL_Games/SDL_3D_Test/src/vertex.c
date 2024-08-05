@@ -3,7 +3,7 @@
 struct vertex *vertexList = NULL;
 
 void initVertexList(){
-    vertexList = (struct vertex*)malloc(sizeof(struct vertex) * MAX_VERTEX_COUNT);
+    vertexList = (struct vertex*)calloc(MAX_VERTEX_COUNT, sizeof(struct vertex));
 }
 
 void cleanVertexList(){
