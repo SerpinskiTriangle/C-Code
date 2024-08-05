@@ -5,6 +5,8 @@
 #include "vertex.h"
 #include "quit.h"
 
+unsigned char running;
+
 int main(){
     SDL_init();
     initVertexList();
