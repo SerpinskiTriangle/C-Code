@@ -8,6 +8,8 @@
         double z;
     };
     extern struct vertex *vertexList;
+    extern int vertexCount;
     void initVertexList();
+    void appendVertex(double x, double y, double z);
     void cleanVertexList();
 #endif

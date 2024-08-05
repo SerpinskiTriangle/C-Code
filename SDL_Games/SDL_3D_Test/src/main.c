@@ -11,6 +11,7 @@ int main(){
     SDL_init();
     initVertexList();
     running = 1;
+    appendVertex(1,0,-1);
     while (running){
         checkQuit();
         //render
