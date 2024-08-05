@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include "main.h"
 #include "SDL_init.h"
-#include "2DVertex.h"
+#include "3DVertex.h"
 #include "quit.h"
 
 unsigned char running;
