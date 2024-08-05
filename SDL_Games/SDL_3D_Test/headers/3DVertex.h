@@ -1,6 +1,6 @@
 #ifndef VERTEX_3D_H
 #define VERTEX_3D_H
-    #define MAX_VERTEX_COUNT 16
+    #define MAX_VERTEX_3D_COUNT 16
     struct vertex3D {
         double x;
         double y;
