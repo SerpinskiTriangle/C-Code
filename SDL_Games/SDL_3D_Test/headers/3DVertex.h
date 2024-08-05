@@ -1,5 +1,5 @@
-#ifndef VERTEX_H
-#define VERTEX_H
+#ifndef VERTEX_2D_H
+#define VERTEX_2D_H
     #include <stdlib.h>
     #define MAX_VERTEX_COUNT 16
     struct vertex {
