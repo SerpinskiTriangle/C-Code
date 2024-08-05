@@ -1,4 +1,5 @@
 #include "3DVertex.h"
+#include <stdlib.h>
 
 struct vertex *vertexList = NULL;
 int vertexCount = 0;
