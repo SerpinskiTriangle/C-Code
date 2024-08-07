@@ -8,7 +8,7 @@ void initVertex2DList(){
     vertex2DList = (struct vertex2D*)calloc(MAX_VERTEX_2D_COUNT, sizeof(struct vertex2D));
 }
 
-void appendVertex2D(double x, double y, double z){
+void appendVertex2D(double x, double y){
     vertex2DList[vertex2DCount].x = x;
     vertex2DList[vertex2DCount].y = y;
     vertex2DCount++;
