@@ -8,6 +8,6 @@
     extern struct vertex2D *vertex2DList;
     extern int vertex2DCount;
     void initVertex2DList();
-    void appendVertex2D(double x, double y, double z);
+    void appendVertex2D(double x, double y);
     void cleanVertex2DList();
 #endif
