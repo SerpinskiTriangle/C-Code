@@ -3,7 +3,7 @@
     struct SDL_Window;
     struct SDL_Renderer;
 
-    extern struct SDL_state {
+    struct SDL_state {
         struct SDL_Window* window;
         struct SDL_Renderer* renderer;
         const int windowWidth;
