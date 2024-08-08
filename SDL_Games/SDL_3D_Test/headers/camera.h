@@ -8,4 +8,5 @@
         double anglePitch;
     };
     extern struct camera playerCamera;
+    extern int FOV;
 #endif
