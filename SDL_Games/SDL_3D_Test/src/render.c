@@ -5,6 +5,6 @@
 
 void drawVertices2D(){
     for (int i = 0; i < vertex2DCount; i++){
-        SDL_RenderDrawPoint(state.renderer, vertex2DList[i].x+state.windowWidth/2, vertex2DList[i].y+state.windowHeight/2);
+        SDL_RenderDrawPoint(state.renderer, vertex2DList[i].x+state.windowWidth/2, -vertex2DList[i].y+state.windowHeight/2);
     }
 }
