@@ -22,42 +22,59 @@ int main(){
     initEdgeList();
     running = 1;
 
-    appendVertex3D(-10,-10,-10);
-    appendVertex3D(10,-10,-10);
-    appendVertex3D(10,-10,10);
-    appendVertex3D(-10,-10,10);
-    appendVertex3D(-10,10,-10);
-    appendVertex3D(10,10,-10);
-    appendVertex3D(10,10,10);
-    appendVertex3D(-10,10,10);
+    appendVertex3D(1,0, 0);
+    appendVertex3D(0,1, 0);
+    appendVertex3D(-1,0, 0);
+    appendVertex3D(0,-1, 0);
 
-    appendEdge(0,2);
-    appendEdge(1,3);
+    appendVertex3D(0,-10, 0);
+    appendVertex3D(4,-2, 0);
+    appendVertex3D(4,2, 0);
+    appendVertex3D(-5,2, 0);
+    appendVertex3D(-7,-1, 0);
+    appendVertex3D(-7,-10, 0);
+
+    appendVertex3D(8,0,0);
+
+    appendVertex3D(-10,2,0);
+    appendVertex3D(-3,4,0);
+    appendVertex3D(0,10,0);
+    appendVertex3D(3,4,0);
+    appendVertex3D(10,2,0);
+
+    appendEdge(0,1);
     appendEdge(1,2);
-    appendEdge(0,3);
-    appendEdge(0+4,2+4);
-    appendEdge(1+4,3+4);
-    appendEdge(1+4,2+4);
-    appendEdge(0+4,3+4);
-    appendEdge(0,0+4);
-    appendEdge(1,1+4);
-    appendEdge(2,2+4);
-    appendEdge(3,3+4);
-    
-    
+    appendEdge(2,3);
+    appendEdge(3,0);
+
+    appendEdge(4,5);
+    appendEdge(5,6);
+    appendEdge(6,7);
+    appendEdge(7,8);
+    appendEdge(8,9);
+
+    appendEdge(5,10);
+    appendEdge(6,10);
+
+    appendEdge(11,12);
+    appendEdge(12,13);
+    appendEdge(13,14);
+    appendEdge(14,15);
+    appendEdge(15,11);
 
     while (running){
         SDL_SetRenderDrawColor(state.renderer, 0,0,0,255);//temporary-ish (idk if/how to encapsulate)
         SDL_RenderClear(state.renderer);
 
         updateKeyboardState();
-        updatePos(&playerCamera.x, &playerCamera.y, &playerCamera.z);   
+        updatePos(&playerCamera.x, &playerCamera.y, &playerCamera.z);
+        printf("x%e, y%e, z%e\r", playerCamera.x, playerCamera.y,playerCamera.z);
         
         checkQuit();
         
         fullProjectVertices(vertex3DList, vertex3DCount, vertex2DList, playerCamera);
 
-        SDL_SetRenderDrawColor(state.renderer, 100,100,100,0);
+        SDL_SetRenderDrawColor(state.renderer, 10,10,10,0);
         drawEdges();
         SDL_SetRenderDrawColor(state.renderer, 255,255,255,255);
         drawVertices2D();
