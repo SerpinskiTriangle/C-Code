@@ -11,7 +11,7 @@ void drawVertices2D(){
 }
 
 void drawEdge(int index1, int index2){
-    SDL_RenderDrawLine(state.renderer, vertex2DList[index1].x +state.windowWidth/2, -vertex2DList[index1].y+state.windowHeight/2, vertex2DList[index2].x+state.windowWidth/2, -vertex2DList[index2].y+state.windowHeight/2) ? printf(":(\r)") : printf(":)\r");
+    SDL_RenderDrawLine(state.renderer, vertex2DList[index1].x +state.windowWidth/2, -vertex2DList[index1].y+state.windowHeight/2, vertex2DList[index2].x+state.windowWidth/2, -vertex2DList[index2].y+state.windowHeight/2);
 }
 
 void drawEdges(){
