@@ -54,7 +54,8 @@ int main(){
 
         updateKeyboardState();
         updatePos(&playerCamera.x, &playerCamera.y, &playerCamera.z);
-        printf("x%e, y%e, z%e\r", playerCamera.x, playerCamera.y,playerCamera.z);
+        updateRotation(&playerCamera.angleYaw,&playerCamera.anglePitch);
+        printf("x%e, y%e, z%e, ,yaw%e, pitch%e\r", playerCamera.x, playerCamera.y,playerCamera.z, playerCamera.angleYaw, playerCamera.anglePitch);
         
         checkQuit();
         
