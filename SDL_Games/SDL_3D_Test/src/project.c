@@ -5,7 +5,7 @@
 #include <math.h>
 
 
-static struct vertex3D fullRotateVertex3D(struct vertex3D vertex, double angleYaw, double anglePitch){
+struct vertex3D fullRotateVertex3D(struct vertex3D vertex, double angleYaw, double anglePitch){
     double yawRotatedZ = vertex.x * -sin(angleYaw) + vertex.z * cos(angleYaw);
     return (struct vertex3D){
         vertex.x * cos(angleYaw) + vertex.z * sin(angleYaw),
