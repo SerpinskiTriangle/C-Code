@@ -5,6 +5,7 @@
 #include "3DVertex.h"
 #include <SDL.h>
 #include <math.h>
+#include <stdlib.h>
 
 double moveSpeed = 0.5;
 
@@ -17,6 +18,7 @@ static struct vertex3D genMoveVector(){
 
 void updatePos(double *xPos, double *yPos, double *zPos){//temporary movement system for making the rendering part of the engine
     struct vertex3D moveVector = fullRotateVertex3D(genMoveVector(),-playerCamera.angleYaw,-playerCamera.anglePitch);
+    printf("mx%emy%emz%e",moveSpeed*moveVector.x,moveSpeed*moveVector.y,moveSpeed*moveVector.z);
     *xPos += moveSpeed*moveVector.x;
     *yPos += moveSpeed*moveVector.y;
     *zPos += moveSpeed*moveVector.z;

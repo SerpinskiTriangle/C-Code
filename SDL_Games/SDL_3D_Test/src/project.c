@@ -6,12 +6,13 @@
 
 
 struct vertex3D fullRotateVertex3D(struct vertex3D vertex, double angleYaw, double anglePitch){
-    double yawRotatedZ = vertex.x * -sin(angleYaw) + vertex.z * cos(angleYaw);
+    double pitchRotatedZ = vertex.y * sin(anglePitch) + vertex.z * cos(anglePitch);
     return (struct vertex3D){
-        vertex.x * cos(angleYaw) + vertex.z * sin(angleYaw),
-        vertex.y * cos(anglePitch) - (yawRotatedZ) * sin(anglePitch),
-        vertex.y * sin(anglePitch) + (yawRotatedZ) * cos(anglePitch)
-    };
+    vertex.x * cos(angleYaw) + pitchRotatedZ * sin(angleYaw),
+    vertex.y * cos(anglePitch) - vertex.z * sin(anglePitch),
+    -vertex.x * sin(angleYaw) + pitchRotatedZ * cos(angleYaw)
+};
+
 }//this'll work trust
 
 static struct vertex3D translateVertex(struct vertex3D vertex, double x, double y, double z){
